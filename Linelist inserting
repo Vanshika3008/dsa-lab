@@ -1,0 +1,63 @@
+#include <stdio.h>
+#include <stdlib.h>
+struct Node {
+    int data;
+    struct Node* next;
+};
+void insertAtBeginning(struct Node** head_ref, int new_data) {
+    struct Node* new_node = (struct Node*)malloc(sizeof(struct Node));
+    
+    if (new_node == NULL) {
+        printf("Memory allocation failed!\n");
+        return;
+    new_node->data = new_data;
+    new_node->next = (*head_ref);
+    *head_ref = new_node;
+}
+void printList(struct Node* node) {
+    printf("\nCurrent Linked List: ");
+    while (node != NULL) {
+        printf("%d -> ", node->data);
+        node = node->next;
+    }
+    printf("NULL\n");
+}
+int main() {
+    struct Node* head = NULL; 
+    int choice, value;
+
+    printf("--- Linked List: Insert at the Beginning ---\n");
+
+    while (1) {
+        printf("\n1. Insert an element\n");
+        printf("2. Display list and Exit\n");
+        printf("Enter your choice (1 or 2): ");
+        scanf("%d", &choice);
+
+        if (choice == 1) {
+            printf("Enter the integer value to insert: ");
+            scanf("%d", &value);
+            insertAtBeginning(&head, value);
+            printf("%d successfully inserted at the front.\n", value);
+        } 
+        else if (choice == 2) {
+            printList(head);
+            printf("Exiting program.\n");
+            break;
+        } 
+        else {
+            printf("Invalid choice! Please enter 1 or 2.\n");
+        }
+    }
+    struct Node* temp;
+    while (head != NULL) {
+        temp = head;
+        head = head->next;
+        free(temp);
+    }
+
+    return 0;
+  
+           
+        }
+    }

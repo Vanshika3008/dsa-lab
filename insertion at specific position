@@ -1,0 +1,33 @@
+#include<stdio.h>
+#include<stdlib.h>
+struct Node{
+    int data;
+    struct Node*next;
+};
+void insert(struct Node ** head,int data)
+{
+    struct Node *newNode;
+    newNode=(struct Node *)malloc(sizeof(struct Node));
+    if(newNode==NULL){
+        printf("Memory allocation failed\n");
+        return;
+    }
+    newNode -> data = data;
+    newNode ->next =*head;
+    *head=newNode;
+    
+}
+struct Node *temp= *head;
+int i;
+for(int i=1;i<pos-1;i++){
+    temp=temp->next;
+    newNode->next=temp->next;
+    temp->next=newNode;
+}
+int main(){
+    struct Node*head=NULL;
+    insert(&head,10,1);
+    insert(&head,20,2);
+    insert(&head,30,3)
+    return 0;
+}

@@ -1,0 +1,104 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+void printList(struct Node* head) {
+    struct Node* temp = head;
+    while (temp != NULL) {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+void insertAtBeginning(struct Node** head_ref, int new_data) {
+    struct Node* new_node = (struct Node*)malloc(sizeof(struct Node));
+    new_node->data = new_data;
+    new_node->next = (*head_ref);
+    *head_ref = new_node;
+}
+
+void deleteFirstNode(struct Node** head_ref) {
+    if (*head_ref == NULL) {
+        printf("List is already empty.\n");
+        return;
+    }
+    
+    struct Node* temp = *head_ref;
+    *head_ref = (*head_ref)->next; 
+    free(temp);                    
+}
+
+void deleteLastNode(struct Node** head_ref) {
+    if (*head_ref == NULL) {
+        printf("List is already empty.\n");
+        return;
+    }
+
+    struct Node* temp = *head_ref;
+    if (temp->next == NULL) {
+        *head_ref = NULL;
+        free(temp);
+        return;
+    }
+    struct Node* prev = NULL;
+    while (temp->next != NULL) {
+        prev = temp;
+        temp = temp->next;
+    }
+
+    prev->next = NULL; 
+    free(temp);       
+
+void deleteAtPosition(struct Node** head_ref, int position) {
+    if (*head_ref == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+
+    struct Node* temp = *head_ref;
+
+    if (position == 0) {
+        *head_ref = temp->next;
+        free(temp);
+        return;
+    }
+
+    struct Node* prev = NULL;
+    for (int i = 0; temp != NULL && i < position; i++) {
+        prev = temp;
+        temp = temp->next;
+    }
+
+    if (temp == NULL) {
+        printf("Position out of bounds.\n");
+        return;
+    }
+    prev->next = temp->next;
+    free(temp); 
+}
+int main() {
+    struct Node* head = NULL;
+    insertAtBeginning(&head, 10);
+    insertAtBeginning(&head, 20);
+    insertAtBeginning(&head, 30);
+    insertAtBeginning(&head, 40);
+    insertAtBeginning(&head, 50);
+
+    printf("Original Linked List:\n");
+    printList(head);
+    printf("\nAfter deleting the first node:\n");
+    deleteFirstNode(&head);
+    printList(head);
+    printf("\nAfter deleting the last node:\n");
+    deleteLastNode(&head);
+    printList(head);
+    printf("\nAfter deleting node at position 1:\n");
+    deleteAtPosition(&head, 1);
+    printList(head);
+
+    return 0;
+}

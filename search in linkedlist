@@ -1,0 +1,43 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+int data;
+struct Node* next;
+};
+int searchElement(struct Node* head, int item) {
+struct Node* current = head;
+int index = 0;
+
+while (current != NULL) {
+if (current->data == item) {
+return index; 
+}
+current = current->next;
+index++;
+}
+return -1;
+}
+struct Node* createNode(int data) {
+struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+newNode->data = data;
+newNode->next = NULL;
+return newNode;
+}
+
+int main() {
+struct Node* head = createNode(10);
+head->next = createNode(20);
+head->next->next = createNode(30);
+
+int item = 20;
+int result = searchElement(head, item);
+
+if (result != -1)
+printf("Item found at position: %d\n", result + 1);
+else
+printf("Item not found\n");
+
+return 0;
+}
+

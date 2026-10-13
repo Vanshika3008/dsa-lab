@@ -1,0 +1,152 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 100
+
+
+char stack[MAX];
+int top = -1;
+
+void push(char item) {
+    if (top >= MAX - 1) {
+        printf("Stack Overflow\n");
+        return;
+    }
+    stack[++top] = item;
+}
+
+char pop() {
+    if (top < 0) {
+        printf("Stack Underflow\n");
+        return '\0';
+    }
+    return stack[top--];
+}
+
+char peek() {
+    if (top < 0) return '\0';
+    return stack[top];
+}
+
+
+int getStringLength(char* str) {
+    int len = 0;
+    while (str[len] != '\0') {
+        len++;
+    }
+    return len;
+}
+
+
+int isOperand(char ch) {
+    if ((ch >= 'a' && ch <= 'z') || 
+        (ch >= 'A' && ch <= 'Z') || 
+        (ch >= '0' && ch <= '9')) {
+        return 1;
+    }
+    return 0;
+}
+
+
+int isOperator(char ch) {
+    return (ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '^');
+}
+
+
+int getPrecedence(char ch) {
+    switch (ch) {
+        case '+':
+        case '-':
+            return 1;
+        case '*':
+        case '/':
+            return 2;
+        case '^':
+            return 3;
+    }
+    return 0;
+}
+
+
+void reverseString(char* str) {
+    int len = getStringLength(str);
+    for (int i = 0; i < len / 2; i++) {
+        char temp = str[i];
+        str[i] = str[len - 1 - i];
+        str[len - 1 - i] = temp;
+    }
+}
+
+
+void reverseAndSwap(char* exp) {
+    reverseString(exp);
+    int len = getStringLength(exp);
+    for (int i = 0; i < len; i++) {
+        if (exp[i] == '(') {
+            exp[i] = ')';
+        } else if (exp[i] == ')') {
+            exp[i] = '(';
+        }
+    }
+}
+
+
+void infixToPostfix(char* infix, char* postfix) {
+    int i = 0, j = 0;
+    char ch;
+
+    while (infix[i] != '\0') {
+        ch = infix[i];
+
+        
+        if (isOperand(ch)) {
+            postfix[j++] = ch;
+        } 
+      
+        else if (ch == '(') {
+            push(ch);
+        } 
+      
+        else if (ch == ')') {
+            while (top != -1 && peek() != '(') {
+                postfix[j++] = pop();
+            }
+            pop(); // Discard '('
+        } 
+        
+        else if (isOperator(ch)) {
+            
+            while (top != -1 && getPrecedence(peek()) > getPrecedence(ch)) {
+                postfix[j++] = pop();
+            }
+            push(ch);
+        }
+        i++;
+    }
+
+    
+    while (top != -1) {
+        postfix[j++] = pop();
+    }
+    postfix[j] = '\0';
+}
+
+int main() {
+    char infix[MAX], prefix[MAX];
+
+    printf("Enter an infix expression: ");
+    scanf("%s", infix);
+
+   
+    reverseAndSwap(infix);
+
+    
+    infixToPostfix(infix, prefix);
+
+    
+    reverseString(prefix);
+
+    printf("Prefix expression: %s\n", prefix);
+
+    return 0;
+}
